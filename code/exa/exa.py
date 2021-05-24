@@ -48,11 +48,45 @@ def main():
     parser = argparse.ArgumentParser(description="*Train and Eval Exemplar-based Sequence Classifier and K-NN*")
     parser.add_argument("--mode", default="train",
                         help="TODO UPDATE DOC"
-                             "train: train (with eval on dev_file) a model / test at "
-                             "the sentence level; "
-                             "test saved models; zero performs zero shot labeling; "
-                             "seq_labeling_fine_tune performs fine tuning with "
-                             "token-level labels, which must be provided")
+                             "'train': train a model using sentence-level labels "
+                             "'min_max_fine_tune': fine-tune an initially trained sentence-level model using "
+                             "                     constraints only derived from sentence-level labels. "
+                             "                     This is suitable for some settings to encourage sparsity in "
+                             "                     token-level feature detections, and is an example of imposing "
+                             "                     prior information on the distribution of detections. "
+                             "'seq_labeling_fine_tune': fine-tune an initially trained sentence-level model using "
+                             "                          token-level labels. This is the fully supervised binary "
+                             "                          sequence-labeling setting. "
+                             "'test': Evaluate a sentence-level model at the sentence-level ."
+                             "'test_by_contributions': This is only for internal debugging/eval. For local->to->global"
+                             "                         prediction, use the multi-label variant with a global "
+                             "                         constraint, or the token-level distance and magnitude "
+                             "                         constraints over a sentence-level model in "
+                             "                         exa_analysis_sentence_level_analysis.py."
+                             "'zero': Calculate and evaluate zero shot binary labeling. This can also be used with "
+                             "        a fully-supervised model to evaluate the sequence labeling effectiveness."
+                             "'zero_sentiment': Identical to 'zero' but with a different output format for the "
+                             "                  visualized detections in the HTML output. "
+                             "'features': Generate aggregate features summaries for a sentence-level trained model."
+                             "'generate_exemplar_data': Cache token-level exemplar vectors to disk. "
+                             "'save_exemplar_distances': Cache token-level distances between the query and the "
+                             "                           database of exemplars. "
+                             "'train_linear_exa': Train the particular proposed K-NN. In the paper, this is used "
+                             "                    to approximate the original model, but it could also, in principle, "
+                             "                    be trained against ground-truth labels, if available. "
+                             "'eval_linear_exa': Evaluate the proposed K-NN approximation. Also use this to save "
+                             "                   annotated output with detections from the original model, "
+                             "                   the K-NN, and the supplied labels for each sentence in the input. "
+                             "                   Separately, this can also produce human-readable output of "
+                             "                   the detections matched with the corresponding exemplars and a "
+                             "                   decomposition of the weights/terms of the K-NN itself, along "
+                             "                   with distance and label meta-data (i.e., all of the information an "
+                             "                   end-user would need to use this approach in practice for "
+                             "                   explainability/interpretability). Finally, this also optionally "
+                             "                   saves a compact single archive of the output from which we can "
+                             "                   calculate the inference-time decision rules, "
+                             "                   and perform other analyses locally without GPUs."
+                        )
     parser.add_argument("--model", default="rand", help="available models: rand, static, non-static, multichannel")
     parser.add_argument("--dataset", default="aesw", help="available datasets: aesw")
     parser.add_argument("--word_embeddings_file", default="", help="word_embeddings_file")
@@ -289,7 +323,7 @@ def main():
     # the labels used and the database structure arguments should include the new database
     parser.add_argument("--update_knn_model_database", default=False, action='store_true',
                         help="update_knn_model_database")
-    # In this case, any database prediction whose sign differs with that of the ground-truth token-level labels
+    # In this case, any database prediction whose sign differs with that of the ground-truth labels
     # is set to 0.
     parser.add_argument("--zero_original_model_logits_not_matching_label_sign", default=False, action='store_true',
                         help="zero_original_model_logits_not_matching_label_sign")

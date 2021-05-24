@@ -170,6 +170,12 @@ def eval_linear_exa(eval_data_structures, model, params, options, data, number_o
     # must be constant across training epochs, else there is an error in the analysis code:
     total_sign_flips_of_the_original_model = 0
 
+    # The following are the predictions in {0,1} of the original model excluding padding. This is only used to get
+    # random and majority class baselines for model approximations. E.g., if we were to say the approximation always
+    # produces class 0, how well would it do in terms of accuracy? This is particularly useful for context for
+    # unbalanced datasets.
+    original_model_non_padding_predictions = []
+
     if options.print_error_analysis:
         output_exemplar_analysis_file_object = codecs.open(options.output_analysis_file, 'w', 'utf-8')
         if options.output_save_type == 3:
@@ -288,6 +294,9 @@ def eval_linear_exa(eval_data_structures, model, params, options, data, number_o
                     _, query_token_contribution = query_token_to_stats[token_id]
                 if query_non_padding_masks[token_i] == 0:
                     number_of_padding_tokens_excluded_from_analysis += 1
+                else:  # exclude padding
+                    # this is used to get random and majority class baselines for the approximation
+                    original_model_non_padding_predictions.append(1.0 if query_token_contribution > 0 else 0.0)
                 if query_token_contribution > 0:  # model prediction
                     original_model_detection = True
                     if signs[token_i] == 0:
@@ -517,6 +526,9 @@ def eval_linear_exa(eval_data_structures, model, params, options, data, number_o
         print_random_and_majority_class(test_seq_y_for_eval, total_tokens_considered_in_split, flatten_input=True)
         # excluding tokens the original model never saw:
         print_random_and_majority_class(test_seq_y_for_eval_no_padding,
+                                        total_tokens_considered_in_split_excluding_padding, flatten_input=False)
+        print(f"Random and majority class baselines for approximation to the original model's predictions")
+        print_random_and_majority_class(original_model_non_padding_predictions,
                                         total_tokens_considered_in_split_excluding_padding, flatten_input=False)
 
     print(f"Time to complete eval: {(time.time() - start_eval_time) / 60} minutes")

@@ -19,3 +19,4 @@ OUTPUT_ANNOTATION_MAX_LENGTH = "^"  # tokens that the original model never saw s
 # used in the analysis script
 EXA_RULES_ORIGINAL = "ExA"
 EXA_RULES_ORIGINAL_AND_TRUE_SENTENCE_LABEL = "ExAG"
+EXA_RULES_ORIGINAL_AND_TRUE_TOKEN_LABEL = "ExAT"
