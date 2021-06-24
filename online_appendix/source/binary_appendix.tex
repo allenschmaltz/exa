@@ -1,0 +1,257 @@
+% TODO: restore the original clv3.cls for submitted versions
+\documentclass{clv3}
+
+\usepackage{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{darkblue}{rgb}{0, 0, 0.5}
+\hypersetup{colorlinks=true,citecolor=darkblue, linkcolor=darkblue, urlcolor=darkblue}
+
+\bibliographystyle{compling}
+
+% test compatibility with algorithmic.sty
+%\usepackage{algorithmic}
+
+\issue{0}{0}{2019}
+
+%Document Head
+%\dochead{CLV3 Class File Manual}
+
+\runningtitle{Detecting Local Insights from Global Labels}
+
+\runningauthor{Allen Schmaltz}
+
+%%% START added
+%\newcommand{\citet}[1]{\citeauthor{#1}~\shortcite{#1}}
+\usepackage{subcaption}
+\usepackage{basecommon} 
+
+\usepackage{multirow}
+\usepackage{basecommon} 
+% for centering specified-width table columns:
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+% for left justifying specified-width table columns:
+\newcolumntype{T}[1]{>{\raggedright\arraybackslash}p{#1}}
+\definecolor{lightestgray}{gray}{0.85}
+\newcommand{\widelightestgraybox}[1]{{\color{black}\colorbox{lightestgray}{\parbox{\textwidth}{#1}}} }  % used in some tables
+%%%%%%%%%%
+%%% FOR ONLINE APPENDIX -- RESETTING TO MATCH MAIN TEXT (see analogue in clv3.cls)
+%%%%%%%%%%
+\renewcommand\appendix{%
+   \setcounter{section}{4}
+   \renewcommand{\theequation}{\Alph{section}.\arabic{equation}}
+   \renewcommand{\thetable}{\Alph{section}.\arabic{table}}
+   \renewcommand{\thesubsection}{\Alph{section}.\arabic{subsection}}   
+}
+%%% END added
+
+\begin{document}
+
+\title{Online Appendix for ``Detecting Local Insights from Global Labels: Supervised \& Zero-Shot Sequence Labeling via a Convolutional Decomposition''}
+
+\author{Allen Schmaltz}
+\affil{Department of Epidemiology\\Harvard University\\\texttt{aschmaltz@hsph.harvard.edu}}
+
+\maketitle
+
+\begin{abstract} 
+Additional results.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% SECTION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+We provide comparisons to the more recent work of \citet{BujelEtAl-2021-Zeroshot-Weighted-Attention}, which considers weighted attention over Transformer models for zero-shot binary sequence labeling. In this context, we also provide a correspondence to previous models on data similar to the CoNLL 2010 task considered in earlier works.
+
+This provides additional evidence that the inductive bias of the proposed method is particularly conducive to this type of class-conditional feature detection. Across these additional datasets, we find that our proposed approach for zero-shot sequence labeling is at least as effective---and often significantly more so---than alternatives, while also enabling the additional properties described in the main text. 
+
+In Section E we consider the task of grammatical error detection with the FCE dataset, as used in Section 4 of the main text; in Section F we compare against the BEA 2019 grammatical error detection dataset; and in Section G we report results on publicly available data similar to the original CoNLL 2010 task.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\clearpage
+\appendix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% APPENDIXSECTION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\setcounter{section}{4}
+
+\appendixsection{Grammatical Error Detection: Additional Results}\label{sec:fce-additional}
+\subsection{Data} We use the same FCE data of Section 4 of the paper, evaluating on the FCE test set.
+
+\subsection{Models} We use a model identical to \textsc{uniCNN+BERT} of Section 4 of the paper, with the one difference that we use a pre-trained BERT\textsubscript{BASE} Transformer since \citet{BujelEtAl-2021-Zeroshot-Weighted-Attention} uses a Transformer with a BERT\textsubscript{BASE} architecture, RoBERTa \cite{LiuEtAl-2019-RoBERTa}. We use the label \textsc{uniCNN+BERT\textsubscript{BASE}} for this model.
+
+\paragraph{Reference Model}
+
+For instructive purposes, we also train a limited capacity\footnote{Due to the max-pooling operation, $M$ is in effect a hard upper-bound on the number of tokens in a sentence that can have non-zero token-level predictions ($s^{+-}_n$) using this approach.} version of the model with only two filters, $M=2$, \textsc{uniCNN$_{M=2}$+BERT\textsubscript{BASE}}. 
+
+
+\paragraph{Previous Models} The recent work of \citet{BujelEtAl-2021-Zeroshot-Weighted-Attention} adapts the soft attention-based approach used for LSTMs of \citet{ReiAndSogaard-2018-ZeroShotSeq} to multi-headed Transformers, finding that a weighted variant, for which we use the label \textsc{RoBERTa\textsubscript{BASE}+WSA}, yielded higher $F_1$ scores and qualitatively sharper detections than the unweighted version. In contrast, using scores from the multi-headed attention directly required setting a threshold based on held-out token-level labels, and even then, resulted in very diffuse detections only marginally better than a random baseline. We also include the reported results for \textsc{LIME} \cite{RibeiroEtal-2016-LIME} under this RoBERTa\textsubscript{BASE} model, noting that the \textsc{LIME} baseline, is not truly ``zero-shot'' sequence labeling since the threshold is learned based on token-level labels. Finally, we use the label \textsc{LSTM-ATTN-SW} for the model of \citet{ReiAndSogaard-2018-ZeroShotSeq}, as in the main text. We include the $F_1$ scores stated in the earlier work, and we also calculate $F_{0.5}$ scores based on the reported recall and precision results.
+
+\subsection{FCE Additional Results}
+
+\begin{table}
+\caption[Main results]{Additional FCE zero-shot sequence labeling test set results (cf., Table 1 of the main text). Models marked with $\dagger$ indicate results stated in their respective papers. With the exception of \textsc{LIME}, all models only have access to sentence-level labels while training. The sentence-level $F_1$ scores for the CNN models are from the fully-connected layer and are provided for reference. Token-level evaluation is the same across papers, as further indicated by a similar \textsc{Random} baseline from \citet{BujelEtAl-2021-Zeroshot-Weighted-Attention}.} 
+\label{table:fce-test-results-additional}
+%\centering
+%\footnotesize
+\begin{tabular}{lccccc}
+\toprule
+ & \multicolumn{1}{c}{Sent} & \multicolumn{4}{c}{Token-level} \\
+ \cmidrule[0.75pt](lr){2-2}\cmidrule[0.75pt](lr){3-6} \\
+Model & $F_1$ & P & R & $F_1$ & $F_{0.5}$ \\
+\midrule
+\textsc{Random}$\dagger$ & - & 15.11 & 49.81 & 23.19 & 17.56\\
+\textsc{Random} & 58.30 & 15.30 & 50.07 & 23.44 & 17.79\\
+\textsc{MajorityClass} & 80.88 & 15.20 & 100. & 26.39 & 18.31\\
+\midrule
+\textsc{LIME}$\dagger$ & 84.51 & 19.06 & 34.70 & 24.60 & 20.95\\
+\midrule
+\textsc{LSTM-ATTN-SW}$\dagger$ & 85.14 & 28.04 & 29.91 & 28.27 & 28.40\\
+\textsc{RoBERTa\textsubscript{BASE}+WSA}$\dagger$ & 85.62 & 20.76 & 85.36 & 33.31 & 24.46\\
+\midrule
+\textsc{uniCNN$_{M=2}$+BERT\textsubscript{BASE}} & 86.22 & 57.91 & 19.33 & 28.99 & 41.39 \\
+\textsc{uniCNN+BERT\textsubscript{BASE}} & 86.29 & 53.17 & 35.37 & 42.48 & 48.31 \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+Table~\ref{table:fce-test-results-additional} contains the additional baseline results. As expected based on the previously observed quantitative and qualitative results, it is challenging to achieve similar token-level detection results using soft-attention approaches over the Transformer. In fact, the results are substantively lower, even though the sentence-level $F_1$ scores are the same for all practical purposes.\footnote{The difference is also not explained by a smaller Transformer. In fact, on this dataset, the BERT\textsubscript{BASE} variation is no worse than the BERT\textsubscript{LARGE} version used in the main text.} Additionally, a \textsc{LIME} baseline does not correlate particularly well with the human-annotated labels.
+
+The kernel-width-one CNN and linear layer are able to bottleneck the signal from the deep network in a manner corresponding roughly to the token-level labels in these datasets. As we see with \textsc{uniCNN$_{M=2}$+BERT\textsubscript{BASE}}, two filters are sufficient for achieving relatively high precision with similar sentence-level effectiveness. Capacity can then be increased by simply increasing the number of filters, $M$, which increases recall. (Separately, this also yields a representative vector for each token, as described in the main text.) In contrast, increasing soft-attention capacity as with multi-headed attention, while useful---and perhaps critical---in lower layers of the Transformer, leads to very diffuse detections in the final layer vis-a-vis human-annotated token-level labels in these datasets. 
+
+\appendixsection{Grammatical Error Detection: BEA 2019}
+\subsection{Data}
+ 
+We use the data of the BEA-2019 Shared Task on Grammatical Error Correction \cite{BryantEtAl-2019-BEASharedTask} as an additional grammatical error detection dataset. The task is the same as that with the FCE dataset used in the main text, but the BEA-2019 data is reported to include sentences across a greater diversity of language proficiency. We use the split indexes provided by \citet{BujelEtAl-2021-Zeroshot-Weighted-Attention}, using 10\% of the training set for the dev set and the original Shared Task dev set as the held-out test. 
+
+\subsection{Models} We report results for the same main models as in Section E, noting that the \textsc{LSTM-ATTN-SW} result is that reported in \citet{BujelEtAl-2021-Zeroshot-Weighted-Attention}. We additionally fine-tune with the min-max loss for reference on this new dataset, \textsc{uniCNN+BERT\textsubscript{BASE}+mm}.
+
+\subsection{BEA 2019 Results}
+
+\begin{table}
+\caption[Main results]{BEA 2019 zero-shot sequence labeling test set results. Models marked with $\dagger$ indicate results stated in existing works. With the exception of \textsc{LIME}, all models only have access to sentence-level labels while training. The sentence-level $F_1$ scores for the CNN models are from the fully-connected layer and are provided for reference. Token-level evaluation is the same across papers, as further indicated by a similar \textsc{Random} baseline from \citet{BujelEtAl-2021-Zeroshot-Weighted-Attention}.} 
+\label{table:bea2019-test-results}
+%\centering
+%\footnotesize
+\begin{tabular}{lccccc}
+\toprule
+ & \multicolumn{1}{c}{Sent} & \multicolumn{4}{c}{Token-level} \\
+ \cmidrule[0.75pt](lr){2-2}\cmidrule[0.75pt](lr){3-6} \\
+Model & $F_1$ & P & R & $F_1$ & $F_{0.5}$ \\
+\midrule
+\textsc{Random}$\dagger$ & - & 10.05 & 50.00 & 16.73 & 11.96\\
+\textsc{Random} & 57.13 & 10.08 & 50.02 & 16.78 & 12.00\\
+\textsc{MajorityClass} & 78.90 & 10.11 & 100. & 18.36 & 12.32\\
+\midrule
+\textsc{LIME}$\dagger$ & 83.66 & 13.49 & 1.13 & 2.09 & 4.23\\
+\midrule
+\textsc{LSTM-ATTN-SW}$\dagger$ & 81.27 & 10.93 & 61.63 & 18.53 & 13.08\\
+\textsc{RoBERTa\textsubscript{BASE}+WSA}$\dagger$ & 83.68 & 14.20 & 85.49 & 24.35 & 17.04\\
+\midrule
+\textsc{uniCNN+BERT\textsubscript{BASE}} & 84.49 & 37.26 & 37.61 & 37.43 & 37.33 \\
+\textsc{uniCNN+BERT\textsubscript{BASE}+mm} & 84.20 & 45.18 & 27.79 & 34.42 & 40.16 \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+Table~\ref{table:bea2019-test-results} shows that the overall patterns are similar to those on the FCE dataset. The BEA 2019 dataset appears to be more challenging, perhaps owing to the greater diversity of writers, despite having a similar training set size as the FCE data.\footnote{The differences in the distribution are also evident by the lower \textsc{Random} and \textsc{MajorityClass} baselines compared to the FCE data.} As with the FCE data, we see that our approach yields a significantly stronger sequence labeler than the alternatives. 
+
+\appendixsection{Uncertainty Tag Detection: CoNLL 2010}
+
+Previously reported results on the CoNLL 2010 Shared Task \cite{FarkasEtal-2010-CoNLL2010} data suggest a significantly easier zero-shot sequence labeling task than the grammar tasks. At the same time, the $F_1$ scores, and especially the $F_{0.5}$ scores, of more recent Transformer approaches fall below those of soft-attention over LSTMs. We investigate this data distribution further in this section with our model.
+
+\subsection{Data}
+
+The original CoNLL 2010 Shared Task data was not publicly available, so we instead re-process the publicly available Szeged Uncertainty Corpus.\footnote{This data is publicly available at \url{https://rgai.inf.u-szeged.hu/file/139} and described further at \url{https://rgai.inf.u-szeged.hu/node/160}.} This is ostensibly the same training data as the original Shared Task, but the held-out test split is different. We provide our data processing scripts for future replications. We split the data randomly by documents, not sentences, to avoid document overlap across splits, and we remove any sentence overlap between the test split and training and dev. This results in 16,198 sentences for training, 1,960 sentences for dev, and 1,940 sentences for test. The training set is about half the size of that of the grammar sets.
+
+We assign positive token labels ($y_n=1$) to any token contained within a \texttt{ccue} XML tag, and any sentence with at least one positive token receives a positive sentence-level label ($Y=1$). These tags correspond to ``uncertainty'' cues, to which we defer to the original reference for further description. Here we are less interested in the semantic meaning of the tags, and more interested in their distribution compared to the labels of the grammar tasks. The tags are very rare relative to the total number of tokens, with only around 1\% of tokens in the test set having positive labels, but occur with sufficient lexical and contextual regularity to be nonetheless relatively easy for the models to detect, with some exceptions discussed below.
+
+\subsection{Models} Given the new splits, we re-train the \textsc{RoBERTa\textsubscript{BASE}+WSA} model from \citet{BujelEtAl-2021-Zeroshot-Weighted-Attention} using the publicly available code and configuration for the original CoNLL Shared Task. We similarly re-train the \textsc{LSTM-ATTN-SW} model from \citet{ReiAndSogaard-2018-ZeroShotSeq}, which has been reported to out-perform more recent Transformer approaches on this dataset, in contrast to results on the grammar datasets. We lowercase and tokenize the data as done in earlier work. Our base model, \textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}}, uses the uncased smaller BERT model due to the aforementioned lowercasing and for comparison to the earlier Transformer work. We fine-tune 300 dimensional Glove embeddings, as with \textsc{LSTM-ATTN-SW}. We fine-tune the model with the min-max loss, \textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm}, for which we also consider the \textsc{ExAG} inference-time decision rule, \textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm+ExAG}, and a distance-weighted K-NN approximation, \textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm+K$_8$NN\textsubscript{dist.}}. Finally, to provide a rough empirical upper-bound on the zero-shot sequence labeling effectiveness, we also train a fully-supervised model, \textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+S*}, by fine-tuning the base model with token-level labels.
+
+\subsection{CoNLL 2010 Results}
+
+\begin{table}
+\caption[Main results]{CoNLL 2010 zero-shot sequence labeling test set results. Note that this test split differs from that of the original Shared Task. With the exception of \textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+S*}, all models only have access to sentence-level labels while training.} 
+\label{table:conll2010-test-results}
+%\centering
+%\footnotesize
+\begin{tabular}{lccccc}
+\toprule
+ & \multicolumn{1}{c}{Sent} & \multicolumn{4}{c}{Token-level} \\
+ \cmidrule[0.75pt](lr){2-2}\cmidrule[0.75pt](lr){3-6} \\
+Model & $F_1$ & P & R & $F_1$ & $F_{0.5}$ \\
+\midrule
+\textsc{Random} & 31.1 & 1.30 & 52.28 & 2.53 & 1.61 \\
+\textsc{MajorityClass} & 35.57 & 1.24 & 100. & 2.45 & 1.55 \\
+\midrule
+\textsc{LSTM-ATTN-SW} & 89.18 & 87.5 & 73.43 & 79.85 & 84.27 \\
+\textsc{RoBERTa\textsubscript{BASE}+WSA} & 89.97 & 27.65 & 91.03 & 42.41 & 32.12 \\
+\midrule
+\textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}} & 88.08 & 42.74 & 84.60 & 56.79 & 47.43 \\
+\textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm} & 87.45 & 86.69 & 70.56 & 77.80 & 82.90 \\
+\textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm+ExAG} & - & 90.91 & 65.99 & 76.47 & 84.53 \\
+\textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm+K$_8$NN\textsubscript{dist.}} & - & 85.4 & 72.25 & 78.28 & 82.40 \\
+\midrule
+\textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+S*} & 89.05 & 90.73 & 76.14 & 82.80 & 87.38 \\
+\bottomrule
+\end{tabular}
+\end{table} 
+
+The results on the test set appear in Table~\ref{table:conll2010-test-results}. Overall, this test split is slightly less challenging than the original held-out test, which annotated additional held-out articles, but the overall pattern of \textsc{LSTM-ATTN-SW} outperforming the soft-attention variation over a Transformer, \textsc{RoBERTa\textsubscript{BASE}+WSA}, despite similar sentence-level scores, is as previously reported. More diffuse---and higher recall---predictions were also observed on the grammar sets with the \textsc{RoBERTa\textsubscript{BASE}+WSA} model, but the impact here is particularly exaggerated in the $F$ scores due to the sparsity of the ground-truth labels in this dataset. 
+
+The overall scores tend to be much higher than those for the grammar datasets, despite the extreme sparsity of the labeled tokens vs. the total number of tokens. In fact, the most effective models approach the fully-supervised model \textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+S*}. As on the other datasets, the inference-time decision rule \textsc{+ExAG} improves precision, and the K-NN approximation is at least as effective as the corresponding original model. The \textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm} model, which imposes the min-max constraint, closes the gap with the min-max LSTM model, while the \textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}} model results in more diffuse predictions, even though the sentence-level $F_1$ scores are both around 88.\footnote{For the \textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm} and \textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+S*} models we take as the reference sentence-level prediction the max token-level contribution in each sentence, $\hat{Y}=\sgn(s^{+-}_{max})$, rather than the softmax output from the fully-connected layer. This is based on the document-level $F_1$ scores on the dev set. As with the experiments in the main text, we do not impose a global constraint on the final layer when fine-tuning the min-max and supervised losses, so this alternative can be useful if the final layer's parameters change significantly during fine-tuning. These two options for document-level classification are sufficient for our observed binary datasets, but a global constraint can be useful in some cases when extending to multi-class and multi-label settings, which we leave for future work.} This difference is readily evident by simply visualizing the detections; in practice, for new domains or datasets, both models can be trained and compared to better understand the data and suitability of the min-max, or related, constraints. We show examples in Table~\ref{appendix-table-conll2010}. At this level, the differences between the most effective models are likely not practically significant.  
+
+% from https://tex.stackexchange.com/questions/32711/totally-sweet-horizontal-rules-in-latex
+\nointerlineskip \vspace{\baselineskip}
+\hspace{\fill}\rule{0.5\linewidth}{.7pt}\hspace{\fill}
+\par\nointerlineskip \vspace{\baselineskip}
+% particular constraint.
+
+In the most general case, without additional assumptions, determining token-level labels from document-level labels is an under-defined task. Multiple label annotation schemes could be consistent with the document-level labels, which is an independent challenge of the parameters of the neural networks themselves being non-identifiable. Despite these intrinsic challenges, we have proposed and analyzed an approach that is likely to be useful in many settings in practice. The zero-shot sequence labeling approach we have proposed is consistently at least as effective as alternatives as we have identified an inductive bias over the deep networks that corresponds to the annotated labels across the observed datasets at least as closely as known alternatives. In this way, we can leverage the density estimation of a deep network, pre-trained over large amounts of data, for class-conditional feature detection. Combined with the additional approaches linking the predictions to a support set with known labels, we can proactively leverage the deep networks to analyze datasets and models at lower resolutions of the input than that of the available training labels.
+
+\clearpage
+
+\begin{table*}%[!htbp] %[b]
+\caption{Two example sentences from the new CoNLL 2010 test set, across the zero-shot sequence labeling models. Positive predictions are underlined, with true positive predictions in blue and false positive predictions in red. The ground-truth labeled sentence is marked \textsc{True}, with ground-truth token-level labels underlined.}
+\label{appendix-table-conll2010}
+\centering
+%\footnotesize
+\scriptsize
+\begin{tabular}{P{40mm}T{90mm}}
+\toprule
+\widelightestgraybox{Sentence 779}\\
+\midrule
+\textsc{True} & \ttfamily{The BCL6 gene encodes a 95-kDa protein containing six C-terminal zinc-finger motifs and an N-terminal POZ domain, {\underline{suggesting}} that it {\underline{may}} function as a transcription factor.}\\
+\midrule
+\textsc{LSTM-ATTN-SW} & \ttfamily{The BCL6 gene encodes a 95-kDa protein containing six C-terminal zinc-finger motifs and an N-terminal POZ domain, \textcolor{blue}{\underline{suggesting}} that it \textcolor{blue}{\underline{may}} function as a transcription factor.}\\
+\textsc{RoBERTa\textsubscript{BASE}+WSA} & \ttfamily{The BCL6 gene encodes a 95-kDa protein containing six C-terminal zinc-finger motifs and an N-terminal POZ \textcolor{red}{\underline{domain,}} \textcolor{blue}{\underline{suggesting}} \textcolor{red}{\underline{that it}} \textcolor{blue}{\underline{may}} \textcolor{red}{\underline{function as}} a transcription factor.}\\
+\midrule
+\textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}}  & \ttfamily{The BCL6 gene encodes a 95-kDa protein containing six C-terminal zinc-finger motifs \textcolor{red}{\underline{and}} an N-terminal POZ domain, \textcolor{blue}{\underline{suggesting}} that it \textcolor{blue}{\underline{may}} function as a transcription factor.}\\
+\textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm}  & \ttfamily{The BCL6 gene encodes a 95-kDa protein containing six C-terminal zinc-finger motifs and an N-terminal POZ domain, \textcolor{blue}{\underline{suggesting}} that it \textcolor{blue}{\underline{may}} function as a transcription factor.}\\
+\textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm} \textsc{+K$_8$NN\textsubscript{dist.}}  & \ttfamily{The BCL6 gene encodes a 95-kDa protein containing six C-terminal zinc-finger motifs and an N-terminal POZ domain, \textcolor{blue}{\underline{suggesting}} that it \textcolor{blue}{\underline{may}} function as a transcription factor.}\\
+\midrule
+\widelightestgraybox{Sentence 1717}\\
+\midrule
+\textsc{True} & \ttfamily{However, \underline{little is known} about the structure-activity relationship and the mechanism by which endotoxin induces Mn SOD.}\\
+\midrule
+\textsc{LSTM-ATTN-SW} & \ttfamily{However, little is known \textcolor{red}{\underline{about}} the structure-activity relationship and the mechanism by which endotoxin induces Mn SOD.}\\
+\textsc{RoBERTa\textsubscript{BASE}+WSA} & \ttfamily{\textcolor{red}{\underline{However,}} \textcolor{blue}{\underline{little is known}} \textcolor{red}{\underline{about}} the structure-activity relationship and the mechanism by which endotoxin induces Mn SOD.}\\
+\midrule
+\textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}}  & \ttfamily{However, \textcolor{blue}{\underline{little is known}} \textcolor{red}{\underline{about}} the structure-activity relationship and the mechanism by which endotoxin induces Mn SOD.}\\
+\textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm}  & \ttfamily{However, little is \textcolor{blue}{\underline{known}} about the structure-activity relationship and the mechanism by which endotoxin induces Mn SOD.}\\
+\textsc{uniCNN+BERT\textsubscript{BASE\textsubscript{uncased}}+mm} \textsc{+K$_8$NN\textsubscript{dist.}}  & \ttfamily{However, little is \textcolor{blue}{\underline{known}} about the structure-activity relationship and the mechanism by which endotoxin induces Mn SOD.}\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\starttwocolumn
+\bibliography{binary_appendix}
+
+\end{document}
