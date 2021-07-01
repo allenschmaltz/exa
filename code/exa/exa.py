@@ -103,6 +103,7 @@ def main():
     parser.add_argument("--save_model", default=False, action='store_true', help="whether saving model or not")
     parser.add_argument("--early_stopping", default=False, action='store_true', help="whether to apply early stopping")
     parser.add_argument("--epoch", default=100, type=int, help="number of max epoch")
+    parser.add_argument("--batch_size", default=50, type=int, help="batch size during training (excluding the K-NN)")
     parser.add_argument("--learning_rate", default=1.0, type=float, help="learning rate")
     parser.add_argument("--dropout_probability", default=0.5, type=float,
                         help="dropout_probability for training; default is 0.5")
@@ -463,7 +464,7 @@ def main():
         "LEARNING_RATE": options.learning_rate,
         "max_length": max_length,
         "total_length": max_length + 2*constants.PADDING_SIZE,
-        "BATCH_SIZE": 50,
+        "BATCH_SIZE": options.batch_size,
         "WORD_DIM": 300,
         "vocab_size": len(data["vocab"]),  # note this includes padding and unk
         "CLASS_SIZE": len(data["classes"]),
