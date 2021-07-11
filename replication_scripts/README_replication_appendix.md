@@ -4,7 +4,7 @@ For the additional results in the Online Appendix, we consider the FCE data, the
 
 Note that these bash scripts are grouped into a minimal number of files for organizational simplicity, and contain code blocks intended to be run separately rather than calling the script directly from the command line. NOTE, in particular, that after training, the applicable epoch number will need to be updated with the variable `EPOCH=X` for inference to choose the appropriate model file, which may differ from the hard-coded values in the provided examples.
 
-For reference to check that the output is expected (and as an aid to map a particular code block to the applicable table/figure/section/etc. of the paper), in some cases we include expected output in comments after the code block. As with those for the experiments of the main text, these scripts can be viewed as a combination of replication notes for the presented experiments, and tutorials/examples to guide how to run these methods on additional datasets.
+For reference to check that the output is as expected (and as an aid to map a particular code block to the applicable table/figure/section/etc. of the paper), in some cases we include expected output in comments after the code block. As with those for the experiments of the main text, these scripts can be viewed as a combination of replication notes for the presented experiments, and tutorials/examples to guide how to run these methods on additional datasets.
 
 ## FCE data -- Additional Results
 
@@ -38,4 +38,6 @@ Train and evaluate the distance-weighted K-NN model, and additionally evaluate u
 
 ### Baselines from previous works (CoNLL 2010):
 
-(to be added shortly)
+Instructions for running the code from Rei and Søgaard (2018): [additional_data/conll2010uncertainty/baselines_from_external_models/lstm/conll2010uncertainty_mltagger_baseline.sh](additional_data/conll2010uncertainty/baselines_from_external_models/lstm/conll2010uncertainty_mltagger_baseline.sh)
+
+Instructions for running the code from Bujel, Yannakoudakis, and Rei (2021): [additional_data/conll2010uncertainty/baselines_from_external_models/transformer/conll2010uncertainty_transformer_baseline.sh](additional_data/conll2010uncertainty/baselines_from_external_models/transformer/conll2010uncertainty_transformer_baseline.sh)
