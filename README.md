@@ -16,7 +16,7 @@ Examples of how to use the code and to replicate the presented experiments are p
 
 ## Citation
 
-The citation for the [paper](https://arxiv.org/pdf/1906.01154v6.pdf) is as follows:
+*Computational Linguistics* (to appear). The current arXiv citation for the [paper](https://arxiv.org/pdf/1906.01154v6.pdf) is as follows:
 ```bibtex
 @misc{Schmaltz2021-Insights,
       title={Detecting Local Insights from Global Labels: Supervised & Zero-Shot Sequence Labeling via a Convolutional Decomposition},
