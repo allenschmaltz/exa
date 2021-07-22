@@ -42,10 +42,16 @@ For the sentiment data, we primarily analyze uniCNN+BERT while changing the data
 First, we preprocess the FCE data, available at [https://ilexir.co.uk/datasets/index.html](https://ilexir.co.uk/datasets/index.html) with our standard format: [fce_data/data/fce_data_init.sh](fce_data/data/fce_data_init.sh)
 
 Note that this format is as follows, for each document (with a single space between the document-level label and the tokens of the document):
+
+```
 0|1 Document text
+```
 
 The format of the corresponding labels files are as follows, for each document:
+
+```
 0|1 for each token in the document
+```
 
 For the experiments with additional newswire text, we also process samples from the news-oriented One Billion Word Benchmark dataset (Chelba et al. 2013): [fce_data/data/out_of_domain_news_data_init.sh](fce_data/data/out_of_domain_news_data_init.sh). This data is available [here to be added shortly](to_be_added_shortly).
 
@@ -63,27 +69,52 @@ Next, we consider the domain-shifted/out-of-domain augmented data sets.
 
 Generate the exemplar vectors for the Google News data that augments the FCE training set and the test set. We also then cache the distances between the query and the support set, where the query and support set include the FCE data AND the Google News data: [fce_data/out_of_domain/base_model/base_model__cache_exemplar_vectors_to_disk_ood_google_50kdata_as_db_update.sh](fce_data/out_of_domain/base_model/base_model__cache_exemplar_vectors_to_disk_ood_google_50kdata_as_db_update.sh)  
 
-Separately, we then also also cache the distances between query and the support set, where the query is the FCE+2k News test set and the support set is just the original FCE training set: [fce_data/out_of_domain/base_model/base_model__cache_exemplar_vectors_to_disk_ood_google_data.sh](fce_data/out_of_domain/base_model/base_model__cache_exemplar_vectors_to_disk_ood_google_data.sh)
+Separately, we then also cache the distances between the query and the support set, where the query is the FCE+2k News test set and the support set is just the original FCE training set: [fce_data/out_of_domain/base_model/base_model__cache_exemplar_vectors_to_disk_ood_google_data.sh](fce_data/out_of_domain/base_model/base_model__cache_exemplar_vectors_to_disk_ood_google_data.sh)
 
-Next, we evaluate the K-NN first on the FCE+2k News test set using the original FCE training set as the support. For reference, here we also evaluate the zero-shot sequence labeling effectiveness of the original model on the FCE+2k News test set. [fce_data/out_of_domain/base_model/base_model__eval_ood_google_data.sh](fce_data/out_of_domain/base_model/base_model__eval_ood_google_data.sh)
+Next, we evaluate the K-NN first on the FCE+2k News test set using the original FCE training set as the support. For reference, here we also evaluate the zero-shot sequence labeling effectiveness of the original model (uniCNN+BERT) on the FCE+2k News test set. [fce_data/out_of_domain/base_model/base_model__eval_ood_google_data.sh](fce_data/out_of_domain/base_model/base_model__eval_ood_google_data.sh)
 
 Finally, we evaluate the K-NN on the FCE+2k News test set using the *updated support set* consisting of the FCE training set augmented with the 50k News data: [fce_data/out_of_domain/base_model/base_model__eval_ood_google_data_50kdata_as_db_update.sh](fce_data/out_of_domain/base_model/base_model__eval_ood_google_data_50kdata_as_db_update.sh)
 
 ## uniCNN+BERT+mm
 
-Next, we consider fine-tuning the base uniCNN+BERT with the min-max constraint. The base model is already rather effective, but these experiments illustrate how we can bias the token-level contributions with priors for a given task. Here the goal is to increase the precision of the token-level predictions, where we encourage sparsity in the class 1 predictions with the assumption that such sentences also have at least 1 token that is of class 0.
+Next, we fine-tune the base uniCNN+BERT with the min-max constraint. The base model is already rather effective, but these experiments illustrate how we can bias the token-level contributions with priors for a given task. Here the goal is to increase the precision of the token-level predictions, where we encourage sparsity in the class 1 predictions with the assumption that such sentences also have at least 1 token that is of class 0.
 
-First, starting with the uniCNN+BERT as initial weights, we fine-tune the CNN parameters using the sentence-level labels: [fce_data/in_domain/mm_model/mm_model__min_max_finetune.sh](fce_data/in_domain/mm_model/mm_model__min_max_finetune.sh)
+First, starting with the uniCNN+BERT model as the initial weights, we fine-tune the CNN parameters using the sentence-level labels: [fce_data/in_domain/mm_model/mm_model__min_max_finetune.sh](fce_data/in_domain/mm_model/mm_model__min_max_finetune.sh)
 
 Next, we generate the exemplar vectors and then cache the distances between the query and the support set: [fce_data/in_domain/mm_model/mm_model__cache_exemplar_vectors_to_disk.sh](fce_data/in_domain/mm_model/mm_model__cache_exemplar_vectors_to_disk.sh)
 
 Train and evaluate the K-NN models: [fce_data/in_domain/mm_model/mm_model__linear_exa_train_eval.sh](fce_data/in_domain/mm_model/mm_model__linear_exa_train_eval.sh)
 
-Next, we consider the domain-shifted/out-of-domain augmented data sets. (to be added shortly)
+Next, we consider the domain-shifted/out-of-domain augmented data sets.
+
+Generate the exemplar vectors for the Google News data that augments the FCE training set and the test set. We also then cache the distances between the query and the support set, where the query and support set include the FCE data AND the Google News data: [fce_data/out_of_domain/mm_model/mm_model__cache_exemplar_vectors_to_disk_ood_google_50kdata_as_db_update.sh](fce_data/out_of_domain/mm_model/mm_model__cache_exemplar_vectors_to_disk_ood_google_50kdata_as_db_update.sh)  
+
+Separately, we then also cache the distances between the query and the support set, where the query is the FCE+2k News test set and the support set is just the original FCE training set: [fce_data/out_of_domain/mm_model/mm_model__cache_exemplar_vectors_to_disk_ood_google_data.sh](fce_data/out_of_domain/mm_model/mm_model__cache_exemplar_vectors_to_disk_ood_google_data.sh)
+
+Next, we evaluate the K-NN first on the FCE+2k News test set using the original FCE training set as the support. For reference, here we also evaluate the zero-shot sequence labeling effectiveness of the original model (uniCNN+BERT+mm) on the FCE+2k News test set. [fce_data/out_of_domain/mm_model/mm_model__eval_ood_google_data.sh](fce_data/out_of_domain/mm_model/mm_model__eval_ood_google_data.sh)
+
+Finally, we evaluate the K-NN on the FCE+2k News test set using the *updated support set* consisting of the FCE training set augmented with the 50k News data: [fce_data/out_of_domain/mm_model/mm_model__eval_ood_google_data_50kdata_as_db_update.sh](fce_data/out_of_domain/mm_model/mm_model__eval_ood_google_data_50kdata_as_db_update.sh)
 
 ## uniCNN+BERT+S*
 
-(to be added shortly)
+Next, we fine-tune the base uniCNN+BERT with token-level labels to create a fully-supervised sequence labeler. The pipeline is similar to the above, but some alternate and additional command-line flags provide access to the token-level signals in training and from the support set.
+
+First, starting with the uniCNN+BERT model as the initial weights, we fine-tune the CNN parameters using the token-level labels: [fce_data/in_domain/supervised_model/supervised_model__supervised_finetune.sh](fce_data/in_domain/supervised_model/supervised_model__supervised_finetune.sh)
+
+Next, we generate the exemplar vectors and then cache the distances between the query and the support set: [fce_data/in_domain/supervised_model/supervised_model__cache_exemplar_vectors_to_disk.sh](fce_data/in_domain/supervised_model/supervised_model__cache_exemplar_vectors_to_disk.sh)
+
+Train and evaluate the K-NN models: [fce_data/in_domain/supervised_model/supervised_model__linear_exa_train_eval.sh](fce_data/in_domain/supervised_model/supervised_model__linear_exa_train_eval.sh)
+
+Next, we consider the domain-shifted/out-of-domain augmented data sets.
+
+Generate the exemplar vectors for the Google News data that augments the FCE training set and the test set. We also then cache the distances between the query and the support set, where the query and support set include the FCE data AND the Google News data: [fce_data/out_of_domain/supervised_model/supervised_model__cache_exemplar_vectors_to_disk_ood_google_data_50kdata_as_db_update.sh](fce_data/out_of_domain/supervised_model/supervised_model__cache_exemplar_vectors_to_disk_ood_google_data_50kdata_as_db_update.sh)  
+
+Separately, we then also cache the distances between the query and the support set, where the query is the FCE+2k News test set and the support set is just the original FCE training set: [fce_data/out_of_domain/supervised_model/supervised_model__cache_exemplar_vectors_to_disk_ood_google_data.sh](fce_data/out_of_domain/supervised_model/supervised_model__cache_exemplar_vectors_to_disk_ood_google_data.sh)
+
+Next, we evaluate the K-NN first on the FCE+2k News test set using the original FCE training set as the support. For reference, here we also evaluate the zero-shot sequence labeling effectiveness of the original model (uniCNN+BERT+S*) on the FCE+2k News test set. [fce_data/out_of_domain/supervised_model/supervised_model__eval_ood_google_data.sh](fce_data/out_of_domain/supervised_model/supervised_model__eval_ood_google_data.sh)
+
+Finally, we evaluate the K-NN on the FCE+2k News test set using the *updated support set* consisting of the FCE training set augmented with the 50k News data: [fce_data/out_of_domain/supervised_model/supervised_model__eval_ood_google_data_50kdata_as_db_update.sh](fce_data/out_of_domain/supervised_model/supervised_model__eval_ood_google_data_50kdata_as_db_update.sh)
+
 
 # Sentiment Detection Task
 

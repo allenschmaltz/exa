@@ -428,7 +428,7 @@ python exa_analysis_rules.py \
 
 # Additionally, the K-NN eval script above produces visualized output of the predictions. The --output_annotations_file "${OUTPUT_DIR}"/linear_exa.epoch${EPOCH}.database_${DATABASE_SPLIT_NAME}.query_${SPLIT_NAME}.${EXA_MODEL_SUFFIX}.eval.analysis_file.annotations.r1.txt file contains the text of the input with each token annotated as follows:
 # Tokens with the prefix:
-# "*" indicate a ground-truth token-level label (y_n)
+# "*" indicate a ground-truth token-level label (y_n=1)
 # "@" indicate a prediction by the original model (here, for example, uniCNN+BERT_{base_uncased}+mm). These predictions will be the same as those contained in the HTML file --visualization_out_file when running --mode "zero" with the original model.
 # "$" indicate a prediction by the K-NN approximation
 # "^" indicate a token that was cutoff by the original model (i.e., exceeding --max_length used in initial training)
@@ -437,7 +437,7 @@ python exa_analysis_rules.py \
 
 # We provide a few options noted below, but in all cases, the general format is as follows, noting that each block is at the unit of analyis of the token (i.e., all K exemplars are associated with a particular token):
 #
-# In the follwing example, we replace numeric values with X and show options with [possible output 1|possible output 2].
+# In the following example, we replace numeric values with X and show options with [possible output 1|possible output 2].
 
 
       # ---------------------------------------------
@@ -454,7 +454,7 @@ python exa_analysis_rules.py \
       # ~~~~~~~~~~~~~~~~~~~~~~~~~
       # Exemplar at k=1
       #         Database sentence X; k=1 distance: X; token index: X; database true token label: [0|1]; database model logit: X; database TRUE sentence label: [0|1]
-      #         Model term: k=0 n=X w_k=X tanh(f_n=X)=X gamma*(y_n=X)=X w_k*(tanh_f_n+gamma*y_n)=X
+      #         Model term: k=1 n=X w_k=X tanh(f_n=X)=X gamma*(y_n=X)=X w_k*(tanh_f_n+gamma*y_n)=X
       #         "The sentence from the support set corresponding to the exemplar token is here, with the particular token of focus indicated by double brackets: [[]]"
       # ~~~~~~~~~~~~~~~~~~~~~~~~~
       # Exemplar at k=2 ....
@@ -473,9 +473,9 @@ python exa_analysis_rules.py \
 
 ################################################################################
 #### Example of output for 1 token in 1 sentence from test (appears in --output_analysis_file "${OUTPUT_DIR}"/linear_exa.epoch${EPOCH}.database_${DATABASE_SPLIT_NAME}.query_${SPLIT_NAME}.${EXA_MODEL_SUFFIX}.eval.analysis_file.savetype3.r1.txt using the above script.)
-# Note: To get the KNN output value we need to add the components from each of the K=8 exemplars and then the K-NN's bias term. So for example in this case, the KNN logit is 1.554031252861023. We add each of the inidividual components from each of the 8 exemplars:
+# Note: To get the KNN output value we need to add the components from each of the K=8 exemplars and then add the K-NN's bias term. So for example in this case, the KNN logit is 1.554031252861023. We add each of the inidividual components from each of the 8 exemplars:
 # sum of w_k*(tanh_f_n+gamma*y_n):
-# >>> x = 0.16176751255989075+0.2158849537372589+0.24786551296710968+0.2527329623699188+0.26385027170181274+0.4437201917171478+0.4484535753726959+0.4599195122718811+
+# >>> x = 0.16176751255989075+0.2158849537372589+0.24786551296710968+0.2527329623699188+0.26385027170181274+0.4437201917171478+0.4484535753726959+0.4599195122718811
 # and then add the bias, -0.940163254737854:
 # >>> x+-0.940163254737854
 # 1.5540312379598618
