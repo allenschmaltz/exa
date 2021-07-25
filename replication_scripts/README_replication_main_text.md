@@ -53,7 +53,7 @@ The format of the corresponding labels files are as follows, for each document:
 0|1 for each token in the document
 ```
 
-For the experiments with additional newswire text, we also process samples from the news-oriented One Billion Word Benchmark dataset (Chelba et al. 2013): [fce_data/data/out_of_domain_news_data_init.sh](fce_data/data/out_of_domain_news_data_init.sh). This data is available [here to be added shortly](to_be_added_shortly).
+For the experiments with additional newswire text, we also process samples from the news-oriented One Billion Word Benchmark dataset (Chelba et al. 2013): [fce_data/data/out_of_domain_news_data_init.sh](fce_data/data/out_of_domain_news_data_init.sh). This data is available [here](https://drive.google.com/file/d/11MLo5xSyhKLbFoaXFbzOlzMJ7lSK8QKp/view?usp=sharing).
 
 ## uniCNN+BERT
 
@@ -115,11 +115,32 @@ Next, we evaluate the K-NN first on the FCE+2k News test set using the original 
 
 Finally, we evaluate the K-NN on the FCE+2k News test set using the *updated support set* consisting of the FCE training set augmented with the 50k News data: [fce_data/out_of_domain/supervised_model/supervised_model__eval_ood_google_data_50kdata_as_db_update.sh](fce_data/out_of_domain/supervised_model/supervised_model__eval_ood_google_data_50kdata_as_db_update.sh)
 
+## Additional Models
+
+For reference, we also train two of the zero-shot models with the 50k News data + FCE data. This provides a point of comparison for examining the effectiveness of training with out-of-domain/domain-shifted data vs. just updating the database with such data via matching. The matching results are above; the `uniCNN+BERT+news50k` and `uniCNN+BERT+mm+news50k` models are those that directly train with the additional data. These two models are identical to uniCNN+BERT and uniCNN+BERT+mm, respectively, only differing in the training data. Train and evaluate these models with the scripts above for uniCNN+BERT and uniCNN+BERT+mm by replacing the training data with `${SERVER_DRIVE_PATH_PREFIX}/data/corpora/lm/billion/processed/for_decorrelater_experiments/google_1b_combined.binaryevalformat_train_size50000.txt`. The corresponding labels file (for the min-max loss and building the support set data structures) is as follows: `${SERVER_DRIVE_PATH_PREFIX}/data/corpora/lm/billion/processed/for_decorrelater_experiments/google_1b_combined.binaryevalformat_train_labels_size50000.txt`.
 
 # Sentiment Detection Task
+
+## Data
+
+First, we preprocess the locally re-edited data for use in the experiments of this section and the next section: [sentiment_data/data/locally_re-edited_sentiment_data_init.sh](sentiment_data/data/locally_re-edited_sentiment_data_init.sh).
+
+We also preprocess the test set of SemEval-2017 Task 4a: [sentiment_data/data/semeval_2017_data_init.sh](sentiment_data/data/semeval_2017_data_init.sh).
+
+For the purposes of replication, since these preprocessing scripts are relatively involved and may require modifications if the original data and/or directory structures are changed in the future, you can download the preprocessed data [here](https://drive.google.com/file/d/11MLo5xSyhKLbFoaXFbzOlzMJ7lSK8QKp/view?usp=sharing). The original datasets retain their original licenses.
+
+## Models
+
+We demonstrate learning and evaluation of the model trained on 3.4k original reviews, the label **ORIG. (3.4k)** in the paper, using the uniCNN+BERT model. The remaining experiments can then be run by changing the training and/or evaluation data, and/or other parameter variations demonstrated in the sections above. Note that aside from the different data, the only two primary differences with the uniCNN+BERT model used in these experiments compared to that used in the FCE experiments are the following:
+- Reflecting the longer length of the multi-document reviews, rather than the single sentences of the FCE dataset, we allow a longer max input length of 350. Use the option `--max_length 350`.
+- The input is un-tokenized, so we use the option `--input_is_untokenized`.
 
 (to be added shortly)
 
 # Annotation Detection Task/Analysis
 
 (to be added shortly)
+
+---
+
+*For internal use: data hash: zero_2019_2021_v6*

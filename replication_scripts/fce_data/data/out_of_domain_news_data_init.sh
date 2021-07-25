@@ -7,11 +7,11 @@
 ################################################################################
 #######  First, we need to sample the original dataset. This section is
 #######  provided for reference, but the actual files used are available for
-#######  public download in the next section.
+#######  public download via the link in README_replication_main_text.md.
 ################################################################################
 
 # Note that the following input file was derived from the original google1b dataset.
-# Samples from it are used in the train/dev/test splits created below. This file is available for download in the next section.
+# Samples from it are used in the train/dev/test splits created below. This file is available for download via the link in README_replication_main_text.md.
 # ${SERVER_DRIVE_PATH_PREFIX}/data/corpora/lm/billion/processed/google_1b_combined.binaryevalformat.sample1000000.txt
 
 
@@ -40,7 +40,7 @@ python -u ${REPO_DIR}/code/data/fce/create_splits_from_binaryevalformat_data.py 
 #######  Input and processed files available for download
 ################################################################################
 
-# [This zip archive](to_be_added_shortly) contains the following:
+# The zip archive available via the link in README_replication_main_text.md contains the following:
 #
 # The following input file (for the script above, but otherwise not used):
 # ${SERVER_DRIVE_PATH_PREFIX}/data/corpora/lm/billion/processed/google_1b_combined.binaryevalformat.sample1000000.txt
