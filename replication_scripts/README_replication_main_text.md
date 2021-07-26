@@ -117,7 +117,7 @@ Finally, we evaluate the K-NN on the FCE+2k News test set using the *updated sup
 
 ## Additional Models
 
-For reference, we also train two of the zero-shot models with the 50k News data + FCE data. This provides a point of comparison for examining the effectiveness of training with out-of-domain/domain-shifted data vs. just updating the database with such data via matching. The matching results are above; the `uniCNN+BERT+news50k` and `uniCNN+BERT+mm+news50k` models are those that directly train with the additional data. These two models are identical to uniCNN+BERT and uniCNN+BERT+mm, respectively, only differing in the training data. Train and evaluate these models with the scripts above for uniCNN+BERT and uniCNN+BERT+mm by replacing the training data with `${SERVER_DRIVE_PATH_PREFIX}/data/corpora/lm/billion/processed/for_decorrelater_experiments/google_1b_combined.binaryevalformat_train_size50000.txt`. The corresponding labels file (for the min-max loss and building the support set data structures) is as follows: `${SERVER_DRIVE_PATH_PREFIX}/data/corpora/lm/billion/processed/for_decorrelater_experiments/google_1b_combined.binaryevalformat_train_labels_size50000.txt`.
+For reference, we also train two of the zero-shot models with the 50k News data + FCE data. This provides a point of comparison for examining the effectiveness of training with out-of-domain/domain-shifted data vs. just updating the database with such data via matching. The matching results are above; the **uniCNN+BERT+news50k** and **uniCNN+BERT+mm+news50k** models are those that directly train with the additional data. These two models are identical to uniCNN+BERT and uniCNN+BERT+mm, respectively, only differing in the training data. Train and evaluate these models with the scripts above for uniCNN+BERT and uniCNN+BERT+mm by replacing the training data with `${SERVER_DRIVE_PATH_PREFIX}/data/corpora/lm/billion/processed/for_decorrelater_experiments/google_1b_combined.binaryevalformat_train_size50000.txt`. The corresponding labels file (for the min-max loss and building the support set data structures) is as follows: `${SERVER_DRIVE_PATH_PREFIX}/data/corpora/lm/billion/processed/for_decorrelater_experiments/google_1b_combined.binaryevalformat_train_labels_size50000.txt`.
 
 # Sentiment Detection Task
 
@@ -132,10 +132,27 @@ For the purposes of replication, since these preprocessing scripts are relativel
 ## Models
 
 We demonstrate learning and evaluation of the model trained on 3.4k original reviews, the label **ORIG. (3.4k)** in the paper, using the uniCNN+BERT model. The remaining experiments can then be run by changing the training and/or evaluation data, and/or other parameter variations demonstrated in the sections above. Note that aside from the different data, the only two primary differences with the uniCNN+BERT model used in these experiments compared to that used in the FCE experiments are the following:
-- Reflecting the longer length of the multi-document reviews, rather than the single sentences of the FCE dataset, we allow a longer max input length of 350. Use the option `--max_length 350`.
+- Reflecting the longer length of the multi-sentence reviews, rather than the single sentences of the FCE dataset, we allow a longer max input length of 350. Use the option `--max_length 350`.
 - The input is un-tokenized, so we use the option `--input_is_untokenized`.
 
-(to be added shortly)
+First, we train the uniCNN+BERT model on the 3.4k original reviews and evaluate over the counterfactually-augmented data, the Contrast Sets data, and the SemEval data: [sentiment_data/model/orig3k/orig3k.sh](sentiment_data/model/orig3k/orig3k.sh)
+
+Next, we train the K-NN model from which we will derive distance- and output magnitude-based limits/thresholds for determining when to abstain from predicting.
+
+First, as in the usual setup, we cache the exemplar vectors and the distances between exemplar representations: [sentiment_data/model/orig3k/orig3k_model__cache_exemplar_vectors_to_disk.sh](sentiment_data/model/orig3k/orig3k_model__cache_exemplar_vectors_to_disk.sh)
+
+Next, we train and evaluate the K-NN. Here, we also determine the distance and output-magnitude thresholds/cutoffs, via the token-level approximations (not using the token-level labels), for determining when to abstain from predicting over out-of-domain/domain-shifted data: [sentiment_data/model/orig3k/orig3k_model__linear_exa_train_eval.sh](sentiment_data/model/orig3k/orig3k_model__linear_exa_train_eval.sh).
+
+Finally, we also apply the K-NN and the constraints to the out-of-domain SemEval2017 data.
+
+We cache the SemEval2017 exemplar vectors and distances: [sentiment_data/model/orig3k/semeval2017/orig3k_model__cache_exemplar_vectors_to_disk_semeval2017.sh](sentiment_data/model/orig3k/semeval2017/orig3k_model__cache_exemplar_vectors_to_disk_semeval2017.sh)
+
+We then use the K-NN and constraints for prediction over the out-of-domain SemEval2017 data: [sentiment_data/model/orig3k/semeval2017/orig3k_model__linear_exa_eval_semeval2017.sh](sentiment_data/model/orig3k/semeval2017/orig3k_model__linear_exa_eval_semeval2017.sh)
+
+(To reproduce the remaining results in this section of the paper, substitute in the other training sets in place of the 3.4k original reviews in the applicable scripts above.)
+
+We can also fine-tune the model with the min-max loss, which may be of interest when comparing to other models with min-max-style constraints. (We find that this can improve the F0.5 scores, as it increases precision along the lines/directions of tuning the decision boundary with a small amount of token-labeled data, as in Table 9, arXiv v6. See the examples for the FCE data above, or the CoNLL 2010 experiments in the Online Appendix, for an example of fine-tuning with the `--mode "min_max_fine_tune"` option.) In the interest of length, since it is orthogonal to updating the support set and the out-of-domain behavior, we limit our experiments in this section to the base model while changing the training data and/or the support set.
+
 
 # Annotation Detection Task/Analysis
 
