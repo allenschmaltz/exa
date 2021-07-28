@@ -149,14 +149,16 @@ We cache the SemEval2017 exemplar vectors and distances: [sentiment_data/model/o
 
 We then use the K-NN and constraints for prediction over the out-of-domain SemEval2017 data: [sentiment_data/model/orig3k/semeval2017/orig3k_model__linear_exa_eval_semeval2017.sh](sentiment_data/model/orig3k/semeval2017/orig3k_model__linear_exa_eval_semeval2017.sh)
 
-(To reproduce the remaining results in this section of the paper, substitute in the other training sets in place of the 3.4k original reviews in the applicable scripts above.)
+(To reproduce the remaining results in this section of the paper, substitute in the other training sets in place of the 3.4k original reviews in the applicable scripts above. Some additional notes on which dataset splits for training correspond to the labels used in the paper are available in the following: [sentiment_data/model/additional_models.sh](sentiment_data/model/additional_models.sh).)
 
 We can also fine-tune the model with the min-max loss, which may be of interest when comparing to other models with min-max-style constraints. (We find that this can improve the F0.5 scores, as it increases precision along the lines/directions of tuning the decision boundary with a small amount of token-labeled data, as in Table 9, arXiv v6. See the examples for the FCE data above, or the CoNLL 2010 experiments in the Online Appendix, for an example of fine-tuning with the `--mode "min_max_fine_tune"` option.) In the interest of length, since it is orthogonal to updating the support set and the out-of-domain behavior, we limit our experiments in this section to the base model while changing the training data and/or the support set.
 
-
 # Annotation Detection Task/Analysis
 
-(to be added shortly)
+Additionally, we consider the task of detecting re-annotated data. Given the strong zero-shot sequence labeling effectiveness, the model can be used to quickly detect and analyze features in large datasets, detecting subtle distributional differences that may not otherwise be apparent by otherwise looking through the data, at least without a very close reading.
+
+We train the model to predict the original vs. revised reviews, and then visualize the zero-shot token-level predictions and the aggregate features: [sentiment_data/model/predict_domain/predict_domain.sh](sentiment_data/model/predict_domain/predict_domain.sh).
+
 
 ---
 

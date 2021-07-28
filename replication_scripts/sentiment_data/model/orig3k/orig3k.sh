@@ -216,7 +216,7 @@ CUDA_VISIBLE_DEVICES=${GPU_IDS} python -u exa.py \
 --gpu 0 \
 --saved_model_file "${MODEL_DIR}"/aesw_non-static_${EPOCH}.pt \
 --score_vals_file "${OUTPUT_DIR}"/sentence_level_score_vals.dataprefix_${DIR_PREFIX}.split_${SPLIT_NAME}.maxdevepoch.zerorun.txt \
---color_gradients_file support_files/pink_to_blue_64.txt \
+--color_gradients_file ${REPO_DIR}/code/support_files/pink_to_blue_64.txt \
 --visualization_out_file "${OUTPUT_DIR}"/zero_shot.viz.dataprefix_${DIR_PREFIX}.${SPLIT_NAME}.epoch${EPOCH}.html \
 --correction_target_comparison_file ${MODEL_DIR}/not_used.txt \
 --output_generated_detection_file "${OUTPUT_DIR}"/zero_shot.detection.dataprefix_${DIR_PREFIX}.${SPLIT_NAME}.epoch${EPOCH}.txt \
@@ -612,7 +612,7 @@ CUDA_VISIBLE_DEVICES=${GPU_IDS} python -u exa.py \
 --gpu 0 \
 --saved_model_file "${MODEL_DIR}"/aesw_non-static_${EPOCH}.pt \
 --score_vals_file "${OUTPUT_DIR}"/sentence_level_score_vals.dataprefix_${DIR_PREFIX}.split_${SPLIT_NAME}.maxdevepoch.zerorun.txt \
---color_gradients_file support_files/pink_to_blue_64.txt \
+--color_gradients_file ${REPO_DIR}/code/support_files/pink_to_blue_64.txt \
 --visualization_out_file "${OUTPUT_DIR}"/zero_shot.viz.dataprefix_${DIR_PREFIX}.${SPLIT_NAME}.epoch${EPOCH}.html \
 --correction_target_comparison_file ${MODEL_DIR}/not_used.txt \
 --output_generated_detection_file "${OUTPUT_DIR}"/zero_shot.detection.dataprefix_${DIR_PREFIX}.${SPLIT_NAME}.epoch${EPOCH}.txt \
