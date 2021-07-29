@@ -16,6 +16,8 @@ A brief additional appendix with further zero-shot sequence labeling comparisons
 
 Examples of how to use the code in this [repo](https://github.com/allenschmaltz/exa) and to replicate the presented experiments are provided here: [replication_scripts/README.md](replication_scripts/README.md).
 
+The version of the code associated with [arXiv version 6](https://arxiv.org/pdf/1906.01154v6.pdf) (the version accepted to appear in *Computational Linguistics*) has the release tag `v6.0`.
+
 ## Citation
 
 *Computational Linguistics* (to appear). The current arXiv citation for the [paper](https://arxiv.org/pdf/1906.01154v6.pdf) is as follows:
