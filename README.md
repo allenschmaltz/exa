@@ -18,6 +18,10 @@ Examples of how to use the code in this [repo](https://github.com/allenschmaltz/
 
 The version of the code associated with [arXiv version 6](https://arxiv.org/pdf/1906.01154v6.pdf) (the version accepted to appear in *Computational Linguistics*) has the release tag `v6.0`.
 
+## Presentations
+
+The presentation [slides](emnlp_2021_presentation/emnlp_2021_cl_paper_1780_slides.pdf) and [poster](emnlp_2021_presentation/emnlp_2021_cl_paper_1780_poster.pdf) for EMNLP 2021 are available in this repo. The presentation video will be made available after the conference.
+
 ## Citation
 
 *Computational Linguistics* (to appear). The current arXiv citation for the [paper](https://arxiv.org/pdf/1906.01154v6.pdf) is as follows:
