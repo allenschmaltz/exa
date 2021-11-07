@@ -22,6 +22,10 @@ The version of the code associated with [arXiv version 6](https://arxiv.org/pdf/
 
 The presentation [slides](emnlp_2021_presentation/emnlp_2021_cl_paper_1780_slides.pdf) and [poster](emnlp_2021_presentation/emnlp_2021_cl_paper_1780_poster.pdf) for EMNLP 2021 are available in this repo. A high-resolution copy of the pre-recorded presentation video is available on YouTube [here](https://youtu.be/iJ_udvksyqE).
 
+## FAQ
+
+I include an informal FAQ [here](faq/faq.pdf).
+
 ## Citation
 
 *Computational Linguistics* (to appear). The current arXiv citation for the [paper](https://arxiv.org/pdf/1906.01154v6.pdf) is as follows:
