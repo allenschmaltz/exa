@@ -28,14 +28,20 @@ I include an informal FAQ [here](faq/faq.pdf).
 
 ## Citation
 
-*Computational Linguistics* (to appear). The current arXiv citation for the [paper](https://arxiv.org/pdf/1906.01154v6.pdf) is as follows:
+*Computational Linguistics* (2021): [doi: https://doi.org/10.1162/coli_a_00416](https://doi.org/10.1162/coli_a_00416). BibTex:
+
 ```bibtex
-@misc{Schmaltz2021-Insights,
-      title={Detecting Local Insights from Global Labels: Supervised & Zero-Shot Sequence Labeling via a Convolutional Decomposition},
-      author={Allen Schmaltz},
-      year={2021},
-      eprint={1906.01154},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@article{10.1162/coli_a_00416,
+    author = {Schmaltz, Allen},
+    title = "{Detecting Local Insights from Global Labels: Supervised and Zero-Shot Sequence Labeling via a Convolutional Decomposition}",
+    journal = {Computational Linguistics},
+    pages = {1-45},
+    year = {2021},
+    month = {10},
+    abstract = "{We propose a new, more actionable view of neural network interpretability and data analysis by leveraging the remarkable matching effectiveness of representations derived from deep networks, guided by an approach for class-conditional feature detection. The decomposition of the filter-n-gram interactions of a convolutional neural network (CNN) and a linear layer over a pre-trained deep network yields a strong binary sequence labeler, with flexibility in producing predictions at—and defining loss functions for—varying label granularities, from the fully supervised sequence labeling setting to the challenging zero-shot sequence labeling setting, in which we seek token-level predictions but only have document-level labels for training. From this sequence-labeling layer we derive dense representations of the input that can then be matched to instances from training, or a support set with known labels. Such introspection with inference-time decision rules provides a means, in some settings, of making local updates to the model by altering the labels or instances in the support set without re-training the full model. Finally, we construct a particular K-nearest neighbors (K-NN) model from matched exemplar representations that approximates the original model’s predictions and is at least as effective a predictor with respect to the ground-truth labels. This additionally yields interpretable heuristics at the token level for determining when predictions are less likely to be reliable, and for screening input dissimilar to the support set. In effect, we show that we can transform the deep network into a simple weighting over exemplars and associated labels, yielding an introspectable—and modestly updatable—version of the original model.}",
+    issn = {0891-2017},
+    doi = {10.1162/coli_a_00416},
+    url = {https://doi.org/10.1162/coli\_a\_00416},
+    eprint = {https://direct.mit.edu/coli/article-pdf/doi/10.1162/coli\_a\_00416/1966946/coli\_a\_00416.pdf},
 }
 ```
